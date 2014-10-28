@@ -1,1 +1,1 @@
-Claret
+Claret notes
