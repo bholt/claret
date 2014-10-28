@@ -1,3 +1,5 @@
+# Related Work
+
 ## Phase Reconciliation for Contended In-Memory Transactions
 - OSDI'14, Neha Narula, Robert Morris (MIT CSAIL)
 - Doppel: multicore, in-memory key/value store
