@@ -1,6 +1,6 @@
 # Related Work
 
-- escrow transactions
+- escrow transactions (Neha got a question about these after her talk)
 
 ## Phase Reconciliation for Contended In-Memory Transactions
 - \cite{Narula:OSDI14}: OSDI'14, Neha Narula, Robert Morris (MIT CSAIL)
