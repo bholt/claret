@@ -1,7 +1,7 @@
 # Related Work
 
-## Phase Reconciliation for Contended In-Memory Transactions \cite{186204}
-- OSDI'14, Neha Narula, Robert Morris (MIT CSAIL)
+## Phase Reconciliation for Contended In-Memory Transactions
+- \cite{186204}: OSDI'14, Neha Narula, Robert Morris (MIT CSAIL)
 - Doppel: multicore, in-memory key/value store
 - Split hot keys, allow a handful of commutative operations on them
 - Periodically recombine split keys and allow non-commutative ops on them
