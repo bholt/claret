@@ -45,3 +45,6 @@
 - uses locks to prevent only the unsafe (unserialiable) executions
 - needs the library to be designed so that it knows how to use "foresight"
 - so it actually can't compose operations from more than one library...
+
+## Commit-reconcile & Fences
+- \cite{Shen:ISCA99}: ISCA'99, on shared memory models for semantic operations on data replicated in caches
