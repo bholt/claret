@@ -4,7 +4,7 @@
 - to apply ideas from combining and abstract locks to distributed transactions
 - avoid hotspots automatically by splitting/replicating on the fly
 - more rigorous notion of serializability and consistency
-    - basically at the level of \cite{Golan-Gueta:2013:CLF:2491956.2462172}
+    - basically at the level of \cite{Golan-Gueta:PLDI13}
 - more generalized notion of commutative ops make transactions more efficient (allow them to commit even while operating on replicas, more concurrency)
 
 ## Hypotheses
