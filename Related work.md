@@ -23,13 +23,13 @@
 	- What is the performance like if you have an `incr` and `read` in the *same* transaction, on the same record? Didn't see if there were any performance numbers for that, but seems like it would probably interact badly with the phasing.
 
 ## Enhancing Concurrency in DTM through Commutativity 
-- \cite{Kim_2013}: EuroPar'13, Junwhan Kim, Roberto Palmieri, Binoy Ravindran
+- \cite{Kim:EuroPar13}: EuroPar'13, Junwhan Kim, Roberto Palmieri, Binoy Ravindran
 - Commutative requests first (CRF)
 - HyFlow: Scala DTM framework
 - *Benchmarks:* TPC-C, linked-list, skip-list
 
 ## Commutativity-based concurrency control for abstract data types
-- \cite{Weihl:1988:CCC:54764.54787}: W. Weihl, *IEEE Transactions on Computers*, 1988.
+- \cite{Weihl:1988}: W. Weihl, *IEEE Transactions on Computers*, 1988.
 - some historical background on using abstract data structure semantics for concurrency control
 
 ## Transactional boosting
@@ -38,7 +38,7 @@
 - notion of *abstract locks* which are a generalization of reader/writer locks that encapsulate which operations can proceed in parallel (commute) with other operations
 
 ## Concurrent libraries with foresight
-- \cite{Golan-Gueta:2013:CLF:2491956.2462172}: PLDI'13, Mooly Sagiv...
+- \cite{Golan-Gueta:PLDI13}: PLDI'13, Mooly Sagiv...
 - Composing atomic library operations (e.g. operations on synchronized data structures)
 - "atomic composite operations": restricted form of transaction
 - formalizes a process for determining which possible reorderings lead to serializable executions
