@@ -8,7 +8,7 @@
 - *Weaknesses*
 	- a couple ad-hoc commutative operations, no broader theory about which operations to allow, etc.
 	- only for key/value store kinds of workloads
-	- not sure if it works for multi-key transactions
+	- not sure if it works for multi-key transactions (*it does seem to work for multiple records, relying on OCC for non-split records and the fact that anything done to split records is valid in any serialization*)
 - *Benchmarks/workloads*
 	- Social network "Like"s (keep track of count of likes as they come in)
 	- RUBiS auction website (7 tables, 26 interactions)
