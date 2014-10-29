@@ -20,13 +20,19 @@
 - *Benchmarks:* TPC-C, linked-list, skip-list
 
 ## Commutativity-based concurrency control for abstract data types
-- W. Weihl, *IEEE Transactions on Computers*, 1988.
+- \cite{Weihl:1988:CCC:54764.54787}: W. Weihl, *IEEE Transactions on Computers*, 1988.
+- some historical background on using abstract data structure semantics for concurrency control
 
 ## Transactional boosting
 - PPoPP'08, Maurice Herlihy, Eric Koskinen
-- abstract locks
+- introduces the idea of using semantics of concurrent-safe data structures to reason about when transactions can be be done safely in parallel
+- notion of *abstract locks* which are a generalization of reader/writer locks that encapsulate which operations can proceed in parallel (commute) with other operations
 
 ## Concurrent libraries with foresight
-- PLDI'13, Mooly Sagiv
+- \cite{Golan-Gueta:2013:CLF:2491956.2462172}: PLDI'13, Mooly Sagiv...
 - Composing atomic library operations (e.g. operations on synchronized data structures)
 - "atomic composite operations": restricted form of transaction
+- formalizes a process for determining which possible reorderings lead to serializable executions
+- uses locks to prevent only the unsafe (unserialiable) executions
+- needs the library to be designed so that it knows how to use "foresight"
+- so it actually can't compose operations from more than one library...
