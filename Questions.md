@@ -1,0 +1,12 @@
+# Questions
+- how to implement this?
+	- something in Spark?
+	- in Grappa?
+	- in an existing database (e.g. Postgres?)
+- how to evaluate?
+	- data structure microbenchmarks
+		- key/value store
+		- kv with more interesting values (e.g. sets)
+	- database workload
+		- graph db?
+	- web server workload (like phase-recon paper)
