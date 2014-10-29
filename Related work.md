@@ -14,7 +14,7 @@
 	- RUBiS auction website (7 tables, 26 interactions)
 
 ## Enhancing Concurrency in DTM through Commutativity 
-- EuroPar'13, Junwhan Kim, Roberto Palmieri, Binoy Ravindran
+- \cite{Kim_2013}: EuroPar'13, Junwhan Kim, Roberto Palmieri, Binoy Ravindran
 - Commutative requests first (CRF)
 - HyFlow: Scala DTM framework
 - *Benchmarks:* TPC-C, linked-list, skip-list
