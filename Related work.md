@@ -33,7 +33,7 @@
 - some historical background on using abstract data structure semantics for concurrency control
 
 ## Transactional boosting
-- PPoPP'08, Maurice Herlihy, Eric Koskinen
+- \cite{Herlihy:PPoPP08}: PPoPP'08, Maurice Herlihy, Eric Koskinen
 - introduces the idea of using semantics of concurrent-safe data structures to reason about when transactions can be be done safely in parallel
 - notion of *abstract locks* which are a generalization of reader/writer locks that encapsulate which operations can proceed in parallel (commute) with other operations
 
