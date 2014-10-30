@@ -42,8 +42,9 @@
     - which pieces are "immediate" and which are "deferrable"
     - "merge" immediates with dependent deferrable so you don't accidentally run them too early
 - *Benchmarks:* TPC-C
-    - excellent scaling (near linear)
-    - drops off with increased contention
+- *Comparisons*
+    - doesn't do replication for hot keys
+    - how pieces are reordered seems a bit crude, and seems like it would have high runtime overhead (tracking dependences dynamically, despite using offline (static?) analysis)
 
 ## Enhancing Concurrency in DTM through Commutativity 
 - \cite{Kim:EuroPar13}: EuroPar'13, Junwhan Kim, Roberto Palmieri, Binoy Ravindran
