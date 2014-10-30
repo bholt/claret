@@ -8,3 +8,6 @@
 	- hot vertices in graph, replicate their state (or parts of it)
 - Fences
     - difference between a *global* fence (tx committed on all replicas of objects) and *anywhere* or *local* fence (tx committed on *a* replica, so we can get a result, but may not know its global order yet)
+- Opportunistic (or optional) transactions
+    - could have some transaction scheduler that is allowed to drop some txs if they are marked as optional
+    - example: sampled query of values. any that are "too hard" to read we can just skip. or use weaker semantics (i.e. require only *local* fence)
