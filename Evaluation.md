@@ -5,6 +5,9 @@
     - show that it scales out in terms of increasing contention and number of nodes
     - show that the technique subsumes existing work avoiding contention
     - new workloads enabled by this? (may just be made significantly more efficient)
+- key/value store database
+    - TPC-C, LIKE, RUBiS (auction website), ...
+    - what has more interesting operations on the records than just `incr`?
 - graph database
     - must we support multi-node transactions? is it worth it?
     - transactions:
