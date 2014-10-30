@@ -3,8 +3,8 @@
 ## Goals
 - to apply ideas from combining and abstract locks to distributed transactions
 - avoid hotspots automatically by splitting/replicating on the fly
-- more rigorous notion of serializability and consistency
-    - basically at the level of \cite{Golan-Gueta:PLDI13}
+- apply a more rigorous notion of serializability and consistency on data structures
+    - basically at the level of \cite{Herlihy:PPoPP08} & \cite{Golan-Gueta:PLDI13}
 - more generalized notion of commutative ops make transactions more efficient (allow them to commit even while operating on replicas, more concurrency)
 
 ## Hypotheses
