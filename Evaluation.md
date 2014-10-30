@@ -2,7 +2,9 @@
 
 - *Goals*
     - show that this approach does better than OCC/contending
-    - show that the technique subsumes existing work and opens the door for new kinds of efficient transactions
+    - show that it scales out in terms of increasing contention and number of nodes
+    - show that the technique subsumes existing work avoiding contention
+    - new workloads enabled by this? (may just be made significantly more efficient)
 - graph database
     - must we support multi-node transactions? is it worth it?
     - transactions:
