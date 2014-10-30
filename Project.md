@@ -8,9 +8,9 @@
 - more generalized notion of commutative ops make transactions more efficient (allow them to commit even while operating on replicas, more concurrency)
 
 ## Hypotheses
-- asynchronous phasing/reconciliation will perform alright and reduce the overhead of waiting
+- asynchronous phasing/reconciliation will perform better than global bulk-synchronous approaches
 - exposing more mergeable operations will allow more concurrency and therefore greater performance
-- these techniques will allow us to enforce strong consistency with low cost, provided your operations are designed well
+- combining will reduce the overhead (processing time & data movement) of staging and reordering transactions
 
 ## Implementation
 - How to do splitting?
