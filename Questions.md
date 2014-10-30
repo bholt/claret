@@ -3,10 +3,14 @@
 	- something in Spark?
 	- in Grappa?
 	- in an existing database (e.g. Postgres?)
-- how to evaluate?
+- how best to evaluate?
 	- data structure microbenchmarks
 		- key/value store
 		- kv with more interesting values (e.g. sets)
 	- database workload
 		- graph db?
-	- web server workload (like phase-recon paper)
+	- web server workload (like phase-reconciliation paper)
+- what's the minimal set of features to make this interesting?
+    - combining ops w/o replication?
+    - combining & replication w/o multi-object transactions?
+    - all?
