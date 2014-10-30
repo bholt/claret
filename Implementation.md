@@ -15,3 +15,8 @@
         - data structure maintainer must implement by hand?
 - Asynchronous record/object reconciliations or global phases?
     - Seems like most of the current work I've seen relies on global phases (both OSDI'14 papers at least). My intuition is that any time you implement a global synchronization, you're probably leaving performance on the floor. Are they doing this because it's an easier implementation? Maybe in the presence of coordinating multi-object transactions, it's too hard to do asynchronously and you just default to global phases?
+- Combining with transactions
+    - combined ops (*patches*) include a set of transactions, but 1 transaction may be split among multiple patches
+    - is there any chance of having unserializable sets of combined ops? (for example, can I end up with some operations in one patch that rely on a particular order, which is different than the order observed for the second patch?)
+        - I'm thinking that this shouldn't be a problem since we're only combining ops that commute w.r.t the current state/mode of the object, but because we're splitting transactions and recombining them per-object this is worth considering carefully. 
+	- how do we efficiently keep track of which transactions are in a given patch? how do we know when it's been completed?
