@@ -1,7 +1,7 @@
-Related work.md
 Project.md
+Novelty.md
 Implementation.md
 Evaluation.md
 Questions.md
-Novelty.md
+Related work.md
 Ideas.md
