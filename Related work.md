@@ -1,6 +1,13 @@
 # Related Work
 
-- escrow transactions (Neha got a question about these after her talk)
+- Primary "competing systems"
+    - Strict serializability
+        - Rococo (OSDI'14)
+        - Calvin: Pre-ordered locking (SIGMOD'12)
+        - Spanner: 2PL (OSDI'12)
+        - HStore: OCC (VLDB'07)
+    - Serializable
+        - Lynx (SOSP'13)
 
 ## Phase Reconciliation for Contended In-Memory Transactions
 - \cite{Narula:OSDI14}: OSDI'14, Neha Narula, Robert Morris (MIT CSAIL)
@@ -21,6 +28,22 @@
 - *Questions*
 	- what happens when *part* of a transaction has to wait until a joined phase (if run during a split phase)? Does the transaction abort? Suspend and resume and commit later?
 	- What is the performance like if you have an `incr` and `read` in the *same* transaction, on the same record? Didn't see if there were any performance numbers for that, but seems like it would probably interact badly with the phasing.
+	- escrow transactions (Neha got a question about these after her talk)
+
+## Extracting More Concurrency from Distributed Transactions
+- \cite{Mu:OSDI14} Rococo - two-phase protocol, implemented on distributed transactional db
+    - https://github.com/msmummy/rococo
+- defer pieces of transactions to allow reordering execution to avoid conflicts
+- two-phase protocol to reorder staged computations
+- decentralized dependency tracking
+    - all participating nodes receive all observed dependence graphs
+    - use deterministic order (*why do we need to track dependence graphs?*)
+- do offline checking to find dependences and potential cycles
+    - which pieces are "immediate" and which are "deferrable"
+    - "merge" immediates with dependent deferrable so you don't accidentally run them too early
+- *Benchmarks:* TPC-C
+    - excellent scaling (near linear)
+    - drops off with increased contention
 
 ## Enhancing Concurrency in DTM through Commutativity 
 - \cite{Kim:EuroPar13}: EuroPar'13, Junwhan Kim, Roberto Palmieri, Binoy Ravindran
