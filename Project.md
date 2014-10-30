@@ -26,3 +26,5 @@
         - allows for annihilation
         - saves from sending state of large object at splitting time
         - data structure maintainer must implement by hand?
+- Asynchronous record/object reconciliations or global phases?
+    - Seems like most of the current work I've seen relies on global phases (both OSDI'14 papers at least). My intuition is that any time you implement a global synchronization, you're probably leaving performance on the floor. Are they doing this because it's an easier implementation? Maybe in the presence of coordinating multi-object transactions, it's too hard to do asynchronously and you just default to global phases?
