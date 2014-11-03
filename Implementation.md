@@ -24,3 +24,16 @@
     - using the notion of futures (returned by atomic ops) may make this easier to think about.
     - can allow futures to be *chained* into multi-hop transactions
     - individual futures can be *combined* locally into more compact multi-futures
+
+### Example: Counter (not to be confused with *counterexample*)
+- Usage:
+    - "Likes" on social network pages
+- Operations:
+    - `read: => T`
+    - `write: => void`
+    - `incr: => void`
+    - `fetch_add: => T` (??)
+- Transactions
+    - display: `read`
+    - like: `incr >> read` (or `fetch_add`)
+    - new: `write`
