@@ -20,3 +20,7 @@
     - is there any chance of having unserializable sets of combined ops? (for example, can I end up with some operations in one patch that rely on a particular order, which is different than the order observed for the second patch?)
         - I'm thinking that this shouldn't be a problem since we're only combining ops that commute w.r.t the current state/mode of the object, but because we're splitting transactions and recombining them per-object this is worth considering carefully. 
 	- how do we efficiently keep track of which transactions are in a given patch? how do we know when it's been completed?
+- Futures
+    - using the notion of futures (returned by atomic ops) may make this easier to think about.
+    - can allow futures to be *chained* into multi-hop transactions
+    - individual futures can be *combined* locally into more compact multi-futures
