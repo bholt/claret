@@ -1,8 +1,13 @@
 # Questions
 - how to implement this?
-	- something in Spark?
 	- in Grappa?
-	- in an existing database (e.g. Postgres?)
+	- in Spark?
+	- in an existing database?
+    	- Redis? ("data structures server", but not designed to be consistent across replicas)
+    	- Tapir?
+    	- Doppel? (Phase Reconciliation paper)
+	- Existing DTM framework
+    	- HyFlow (Scala)
 - how best to evaluate?
 	- data structure microbenchmarks
 		- key/value store
