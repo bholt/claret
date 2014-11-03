@@ -13,3 +13,5 @@
     - transactions:
         - read queries (over small parts of the graph)
         - add edge & update vertices on both side
+    - LinkBench?
+    - SNBC?
