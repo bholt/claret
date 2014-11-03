@@ -6,10 +6,8 @@
         - Redis? ("data structures server", but not designed to be consistent across replicas)
 	        - would people take this seriously if it was a modification to Redis?
         - Tapir?
-        - Doppel? (Phase Reconciliation paper)
-	        - code not (yet) available
-        - Lynx / Rococo
-	        - Distributed key/value store
+        - Lynx (geo-replicated, explicit transaction chains)
+        - Rococo (distributed key/value store, reorder pieces of transactions to ensure strict serializability)
     - Existing DTM framework
         - HyFlow (Scala)
 - how best to evaluate?
@@ -23,3 +21,5 @@
     - combining ops w/o replication?
     - combining & replication w/o multi-object transactions?
     - all?
+- What's the difference between "strict serializability" vs just "serializability"?
+    - for instance, Rococo differentiates itself from Lynx this way (Rococo is strictly serializable, Lynx just serializable)
