@@ -4,8 +4,12 @@
     - in Spark?
     - in an existing database?
         - Redis? ("data structures server", but not designed to be consistent across replicas)
+	        - would people take this seriously if it was a modification to Redis?
         - Tapir?
         - Doppel? (Phase Reconciliation paper)
+	        - code not (yet) available
+        - Lynx / Rococo
+	        - Distributed key/value store
     - Existing DTM framework
         - HyFlow (Scala)
 - how best to evaluate?

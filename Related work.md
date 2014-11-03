@@ -49,8 +49,19 @@
     - doesn't do replication for hot keys
     - how pieces are reordered seems a bit crude (anything that produces a value is "immediate" and cannot be deferred)
     - seems like it would have high runtime overhead (tracking dependences dynamically, despite using offline (static?) analysis)
-- Citations
-    - Transaction chains \cite{Zhang:SOSP13} (same authors): *Lynx*; statically split transactions into pieces that run on different locations, either the whole chain gets committed or none
+
+### Transaction chains
+- Prior work \cite{Zhang:SOSP13} (same authors)
+- *Lynx*: geo-replicated key/value store
+- programmer splits transactions into pieces that run on different locations
+- whole chain is executed in a serializable way, can only *fail* at the first hop
+- static analysis to determine if the above can be enforced
+- *Benchmarks*
+    - Social: FB-like social graph, users, walls, activity feeds
+    - Twitter: Users, tweets, directed graph
+    - RUBiS
+- *Questions*
+    - not thinking about high contention cases? does that come up in the social graphs?
 
 ## Enhancing Concurrency in DTM through Commutativity 
 - \cite{Kim:EuroPar13}: EuroPar'13, Junwhan Kim, Roberto Palmieri, Binoy Ravindran
