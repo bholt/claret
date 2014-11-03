@@ -32,6 +32,9 @@
 	- what happens when *part* of a transaction has to wait until a joined phase (if run during a split phase)? Does the transaction abort? Suspend and resume and commit later?
 	- What is the performance like if you have an `incr` and `read` in the *same* transaction, on the same record? Didn't see if there were any performance numbers for that, but seems like it would probably interact badly with the phasing.
 	- escrow transactions (Neha got a question about these after her talk)
+- Citations
+    - RedBlue consistency \cite{Li:OSDI12}: separate ops into "blue" fast ops which don't require strict consistency, and "red" which are slower but more general. uses same RUBiS benchmark
+    - Conflict-free replicated data types \cite{Shapiro:SSS11}: will converge under eventually-consistent conditions
 
 ## Extracting More Concurrency from Distributed Transactions
 - \cite{Mu:OSDI14} Rococo - two-phase protocol, implemented on distributed transactional db
