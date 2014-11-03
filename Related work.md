@@ -8,6 +8,8 @@
         - HStore: OCC (VLDB'07)
     - Serializable
         - Lynx (SOSP'13)
+    - Data structures server
+        - Redis: values can be sets, hashmaps, hyperloglogs, etc
 
 ## Phase Reconciliation for Contended In-Memory Transactions
 - \cite{Narula:OSDI14}: OSDI'14, Neha Narula, Robert Morris (MIT CSAIL)
