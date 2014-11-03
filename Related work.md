@@ -44,6 +44,8 @@
 - do offline checking to find dependences and potential cycles
     - which pieces are "immediate" and which are "deferrable"
     - "merge" immediates with dependent deferrable so you don't accidentally run them too early
+    - **requires global knowledge of all transactions ahead of time**
+    - if there are *immediate* operations with conflicts without a deferrable op, then it can't be reordered on the fly, so forced to take slow path (make it atomic via OCC/2PL)
 - *Benchmarks:* TPC-C
 - *Comparisons*
     - doesn't do replication for hot keys
