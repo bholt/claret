@@ -91,3 +91,11 @@
 
 ## Commit-reconcile & Fences
 - \cite{Shen:ISCA99}: ISCA'99, on shared memory models for semantic operations on data replicated in caches
+
+## TAPIR
+- Consistent transactions with inconsistent replication
+- TAPIR-KV: key/value store using the protocol
+- *Benchmarks*
+    - *Retwis*: Twitter clone built for Redis
+        - why does it not use data structures? (TAPIR paper says it's puts/gets)
+

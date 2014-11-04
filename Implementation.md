@@ -25,6 +25,15 @@
     - can allow futures to be *chained* into multi-hop transactions
     - individual futures can be *combined* locally into more compact multi-futures
 
+### TAPIR Extension
+- *Feasible*?
+    - Would the resulting protocol be too complex?
+    - Is it weird to work on it while in submission?
+    - Is the code in a good place to be extended? Is the plan to maintain it going forward?
+- Seems like there is some synergy in that there are already multiple replicas in memory to work on.
+- Reads typically just need to hit one replica; maybe commutative/combining ops can do the same?
+- Do combining at replicas; when sharing results with others, apply them in a deterministic order (or if all commute, then whatever order you want)
+
 ### Example: Counter (not to be confused with *counterexample*)
 - Usage:
     - "Likes" on social network pages

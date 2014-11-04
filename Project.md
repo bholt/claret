@@ -14,3 +14,5 @@
 - asynchronous phasing/reconciliation will perform better than global bulk-synchronous approaches
 - exposing more mergeable operations will allow more concurrency and therefore greater performance
 - combining will reduce the overhead (processing time & data movement) of staging and reordering transactions
+- data structures = better programming model
+

@@ -5,7 +5,7 @@
     - in an existing database?
         - Redis? ("data structures server", but not designed to be consistent across replicas)
 	        - would people take this seriously if it was a modification to Redis?
-        - Tapir?
+        - *TAPIR*?
         - Lynx (geo-replicated, explicit transaction chains)
         - Rococo (distributed key/value store, reorder pieces of transactions to ensure strict serializability)
     - Existing DTM framework
