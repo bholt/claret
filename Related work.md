@@ -20,6 +20,8 @@
     - operations defined as returning `void` so they can be "split"
 - Periodically recombine split keys and allow non-commutative ops on them
     - "stash" conflicting transactions
+- Merge has to be linear in #cores not #ops
+- OrderedPut operation lets you say, "if I won, I get to do x"
 - *Weaknesses*
     - a couple ad-hoc commutative operations, no broader theory about which operations to allow, etc.
     - only for key/value store kinds of workloads

@@ -17,3 +17,8 @@
         - add edge & update vertices on both side
     - LinkBench?
     - SNBC?
+
+### Tapir
+- Retwis
+    - vary the zipfian coeff. to change the contention
+    - see how Paxos, Tapir, and Tapir+Claret scale with increased contention x cluster size
