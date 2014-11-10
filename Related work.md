@@ -82,6 +82,11 @@
 - introduces the idea of using semantics of concurrent-safe data structures to reason about when transactions can be be done safely in parallel
 - notion of *abstract locks* which are a generalization of reader/writer locks that encapsulate which operations can proceed in parallel (commute) with other operations
 
+## Exploiting the Commutativity Lattice
+- \cite{Kulkarni:PLDI11}: PLDI'11, Milind Kulkarni (Purdue), ..., Keshav Pingali (UT-Austin)
+- generalizes the transactional boosting ideas, express a *lattice* of operations and how they commute with one another, based on the state of the data structure
+- synthesize sync with *abstract locks* or *gatekeeping*
+
 ## Concurrent libraries with foresight
 - \cite{Golan-Gueta:PLDI13}: PLDI'13, Mooly Sagiv...
 - Composing atomic library operations (e.g. operations on synchronized data structures)
