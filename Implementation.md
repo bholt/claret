@@ -33,7 +33,7 @@
 - Reads typically just need to hit one replica; maybe commutative/combining ops can do the same?
 - Do combining at replicas; when sharing results with others, apply them in a deterministic order (or if all commute, then whatever order you want)
 
-#### *First pass:* add Redis data structure ops to increase concurrency / reduce aborts
+##### *First pass:* add Redis data structure ops to increase concurrency / reduce aborts
 - local backing store for each shard/replica
     - currently a KV store (put/get)
     - *todo:* extend/replace with Redis (or something like Redis)
