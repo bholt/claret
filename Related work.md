@@ -106,3 +106,10 @@
     - *Retwis*: Twitter clone built for Redis
         - why does it not use data structures? (TAPIR paper says it's puts/gets)
 
+## Quantum Databases
+- \cite{Roy:CIDR13}
+- Defer choices in transactions until something forces a choice by observing it
+
+## Highly Available Transactions
+- \cite{Bailis:VLDB14} Hellerstein, Berkeley
+- Disallow things that you can't do with high availability (replication)
