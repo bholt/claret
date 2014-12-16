@@ -106,9 +106,18 @@
     - *Retwis*: Twitter clone built for Redis
         - why does it not use data structures? (TAPIR paper says it's puts/gets)
 
+## Quantum Databases
+- \cite{Roy:CIDR13}
+- Defer choices in transactions until something forces a choice by observing it
+
+## Highly Available Transactions
+- \cite{Bailis:VLDB14} Hellerstein, Berkeley
+- Disallow things that you can't do with high availability (replication)
+
 ## Convergent/conflict-free replicated data types
 - only operations that are 
 - two camps: state-based and operation-based
 - http://research.microsoft.com/apps/video/default.aspx?id=153540&r=1
 - http://christophermeiklejohn.com/crdt/2014/07/22/readings-in-crdts.html
 - http://msrvideo.vo.msecnd.net/rmcvideos/153540/dl/153540.mp4
+
