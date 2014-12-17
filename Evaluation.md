@@ -22,3 +22,14 @@
 - Retwis
     - vary the zipfian coeff. to change the contention
     - see how Paxos, Tapir, and Tapir+Claret scale with increased contention x cluster size
+
+
+### Desired workload characteristics
+- Naturally skewed (e.g. resulting from power-law graph structure, auction bids, viral content, etc)
+- Update-heavy: leads to *contention* when skewed
+- Commutative data structure operations available to be exploited
+  - preferably a more complex commutativity structure, rather than simply a boolean "commutes or not"
+
+### Examples
+- Retwis++
+  - add repost/retweets: another contentious 

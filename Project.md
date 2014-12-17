@@ -1,4 +1,9 @@
 # Project
+- Promote a data-structure-store design paradigm: build your applications out of known data types so that the system can reason about commutativity, replication, etc, and you can use *strict consistency*
+- Use commutativity to avoid falling over from contention on *bursty, skewed, update-heavy workloads*
+  - i.e. Ellen retweet, Truffle auction, Reddit
+- Apply *abstract locks* (from database and multi-core STM communities) to *distributed* *ad-hoc* applications like those that use Redis
+- Faster, better, linearizable, transactional Redis.
 
 ## Goals
 - to apply ideas from combining and abstract locks to distributed transactions

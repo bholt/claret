@@ -51,6 +51,22 @@
 - run under Tapir or just traditional Paxos (or both)
     - try to stick all the higher-level operations into `put` ops as far as the upper layers (Tapir/Paxos) are concerned. the OCC layer can sort out what the operations actually are (given the type of the object) and determine if they conflict or not
 
+#### OCC or Locking?
+- use OCC when the vast majority of cases will succeed. this is the case even for contentious workloads *if* all the contending transactions commute (so there must not be other transactions that read and modify the same record)
+  - it seemed like there might be a way to cheat a bit by allowing transactions that only read the contended record and do other independent things (e.g. `post`), because we could just have them read the current un-committed value & timestamp
+  - this seems fine unless the order of two of these txns can be observed. the case we had was two posts, where P1 saw a later committed version of the follower list than P2, but ended up being ordered before P2 in the timeline because we claimed that the timeline is a set ordered by post timestamp so insertions commute. but it seems like they *don't* commute because of the link to actual real time
+- *locks* make it easier to support mixed workloads
+  - we can more easily implement *phases* where non-commuting ops block while ops that commute with the current lock state can proceed immediately
+  - downsides:
+    -  pay the cost of checking every time (though OCC also has to do checks...)
+    -  need a sole coordinator for the lock *(or maybe not if my consistent split replicas work)*
+    -  can't concurrently read from the previous snapshot *(is this true? if we haven't committed them yet, reads could still be done)*
+    -  still can't perform side effects until we've acquired all the locks -- so things will still need to be split-phase
+- *questions*
+  - is starvation more of a problem in one or the other?
+
+
+
 #### Batching & combining
 - add a level of batching to the system that allows you to amortize the checks over commutative phases
 - expose the fact that you're combining multiple txs into a single message to the upper layers
