@@ -65,11 +65,20 @@
 - *questions*
   - is starvation more of a problem in one or the other?
 
+#### My OCC Protocol
+1. *Execute* transaction: do *pure* 'stage' step for each op; each 'stage':
+  - may trivially return (e.g. for simple 'init' or 'set' ops)
+  - or optimistically continue, even though a conflict is possible (e.g. 'read' op may be able to be put before commutative ops)
+  - or immediately *abort* txn (if it's clear it will never work out)
+2. *Prepare* transaction
+  - check that all ops in txn are allowable (e.g. all commute, or if doing 'read', must be completely independent)
+3. *Commit* transaction
+  - execute 'apply' action for each op in txn (performs some kind of mutation)
 
 
 #### Batching & combining
 - add a level of batching to the system that allows you to amortize the checks over commutative phases
-- expose the fact that you're combining multiple txs into a single message to the upper layers
+- expose the fact that you're combining multiple txns into a single message to the upper layers
 - try to come up with a protocol for combining over replicas
 
 #### Contention avoidance by splitting
