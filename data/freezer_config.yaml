@@ -1,0 +1,7 @@
+common:
+  database: mysql:///claret?read_default_file=/Users/bholt/.my.cnf
+  prefix: .
+  format: csv
+exports:
+  - query: SELECT * FROM tapir
+    filename: tapir.csv
