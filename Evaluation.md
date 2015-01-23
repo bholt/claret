@@ -10,6 +10,7 @@
     - LIKE
     - RUBiS (auction website)
     - what has more interesting operations on the records than just `incr`?
+    - YCSB: Yahoo Cloud Serving Benchmark
 - graph database
     - must we support multi-node transactions? is it worth it?
     - transactions:
