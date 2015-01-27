@@ -1,13 +1,20 @@
 #!/usr/bin/env Rscript
 source('common.R')
 
-d <- db('select * from tapir where 
-  generator_time is not null and total_time is not null',
-        factors=c('nshards', 'nclients'),
-        numeric=c('total_time', 'txn_count'))
+d <- db('
+  select * from tapir where 
+  generator_time is not null and total_time is not null
+  and (initusers = 50 or initusers = 500)
+',
+  factors=c('nshards', 'nclients'),
+  numeric=c('total_time', 'txn_count')
+)
 
-d$txn_abort_rate <- d$txn_failed / d$txn_count + d$txn_failed
+colnames(d)
+
+d$abort_rate <- d$txn_failed / (d$txn_count + d$txn_failed)
 d$throughput <- d$txn_count * as.numeric(d$nclients) / d$total_time
+d$avg_latency_ms <- d$txn_time / d$txn_count * 1000
 
 common_layers <- list(theme_mine
 , facet_grid(.~nshards, labeller=label_pretty)
@@ -23,7 +30,39 @@ save(
   ))+
   geom_meanbar()+
   common_layers
-, w=4, h=3)
+, name='throughput', w=4, h=3)
+
+save(
+  ggplot(d, aes(
+      x = nclients,
+      y = avg_latency_ms,
+      color = nshards,
+      fill = nshards,
+      group = nshards
+  ))+
+  # geom_meanbar()+
+  # stat_summary(fun.y='mean', geom='bar', position='dodge')+
+  stat_smooth()+
+  common_layers+
+  geom_hline(y=0)+
+  facet_grid(nshards~initusers, labeller=label_pretty)
+, name='avg_latency', w=8, h=6)
+
+save(
+  ggplot(d, aes(
+      x = nclients,
+      y = abort_rate,
+      color = nshards,
+      fill = nshards,
+      group = nshards
+  ))+
+  # geom_meanbar()+
+  # stat_summary(fun.y='mean', geom='bar', position='dodge')+
+  stat_smooth()+
+  common_layers+
+  geom_hline(y=0)+
+  facet_grid(nshards~initusers, labeller=label_pretty)
+, name='abort_rates', w=8, h=6)
 
 
 d.m <- melt(d, 
@@ -43,9 +82,12 @@ save(
       x = nclients,
       y = value,
       fill = txn_type,
+      color = txn_type,
+      group = txn_type,
   ))+
   # geom_meanbar()+
-  stat_summary(fun.y='mean', geom='bar', position='dodge')+
+  # stat_summary(fun.y='mean', geom='bar', position='dodge')+
+  stat_summary(fun.y='mean', geom='line')+
   common_layers+
   facet_grid(nshards~initusers, labeller=label_pretty)
-, name='abort_rates', w=8, h=6)
+, name='abort_breakdown', w=8, h=6)
