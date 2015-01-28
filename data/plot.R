@@ -11,8 +11,6 @@ d <- db("
   numeric=c('total_time', 'txn_count')
 )
 
-colnames(d)
-
 d$abort_rate <- d$txn_failed / (d$txn_count + d$txn_failed)
 d$throughput <- d$txn_count * as.numeric(d$nclients) / d$total_time
 d$avg_latency_ms <- d$txn_time / d$txn_count * 1000
@@ -25,9 +23,9 @@ save(
   ggplot(d, aes(
     x = nclients,
     y = throughput,
-    fill = nshards,
-    group = nshards,
-    # color = nshards
+    group = ccmode,
+    fill = ccmode,
+    color = ccmode
   ))+
   geom_meanbar()+
   common_layers
@@ -37,9 +35,9 @@ save(
   ggplot(d, aes(
       x = nclients,
       y = avg_latency_ms,
-      color = nshards,
-      fill = nshards,
-      group = nshards
+      group = ccmode,
+      fill = ccmode,
+      color = ccmode
   ))+
   # geom_meanbar()+
   # stat_summary(fun.y='mean', geom='bar', position='dodge')+
@@ -53,9 +51,9 @@ save(
   ggplot(d, aes(
       x = nclients,
       y = abort_rate,
-      color = nshards,
-      fill = nshards,
-      group = nshards
+      group = ccmode,
+      fill = ccmode,
+      color = ccmode
   ))+
   # geom_meanbar()+
   # stat_summary(fun.y='mean', geom='bar', position='dodge')+
@@ -66,7 +64,7 @@ save(
 , name='abort_rates', w=8, h=6)
 
 
-d.m <- melt(d,
+d.m <- melt(subset(d, ccmode == 'simple'),
   measure=c(
     'retwis_newuser_success',
     'retwis_post_success',
