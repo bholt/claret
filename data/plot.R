@@ -27,7 +27,8 @@ save(
     fill = ccmode,
     color = ccmode
   ))+
-  geom_meanbar()+
+  # geom_meanbar()+
+  stat_smooth()+
   common_layers
 , name='throughput', w=4, h=3)
 
