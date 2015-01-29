@@ -11,9 +11,7 @@ db <- function(query, factors=c(), numeric=c()) {
   return(d)
 }
 
-num <- function(var) as.numeric(var)
-
-as.continuous <- function(var) as.numeric(as.character(var))
+num <- function(var) as.numeric(as.character(var))
 
 save <- function(g, name=FILE_BASE, file=sprintf("%s/%s.pdf",FILE_DIR,name), w=3.3, h=3.1) {
   ggsave(plot=g, filename=file, width=w, height=h)

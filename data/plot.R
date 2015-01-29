@@ -12,7 +12,8 @@ d <- db("
 )
 
 d$abort_rate <- d$txn_failed / (d$txn_count + d$txn_failed)
-d$throughput <- d$txn_count * as.numeric(d$nclients) / d$total_time
+d$throughput <- d$txn_count * num(d$nclients) / d$total_time
+# d$throughput <- d$ntxns * num(d$nclients) / d$total_time
 d$avg_latency_ms <- d$txn_time / d$txn_count * 1000
 
 common_layers <- list(theme_mine
@@ -142,7 +143,7 @@ d.m$txn_type <- unlist(lapply(
   d.m$variable,
   function(s) gsub('retwis_(\\w+)_retries','\\1', s))
 )
-d.m$retries <- d.m$values * num(d.m$nclients)
+d.m$retries <- num(d.m$value) * num(d.m$nclients)
 
 save(
   ggplot(d.m, aes(
