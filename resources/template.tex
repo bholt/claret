@@ -75,27 +75,7 @@ $endfor$
 }{
   \{$for(author)$$author.email$,$endfor$\}@cs.washington.edu
 }
-
 \maketitle
-
-\begin{flushleft}
-{\Large
-\textbf{$title$}}
-% Insert Author names, affiliations and corresponding author email.
-\\
-$for(author)$
-$author.given$ $author.family$ $$^{$author.affiliation$ $if(author.email)$,\ast$endif$}$$,
-$endfor$
-\\
-$for(organization)$
-\bf{$organization.id$} $organization.name$, $organization.address$
-$endfor$
-\\
-$for(author)$
-$if(author.email)$ $$\ast$$ E-mail: $author.email$ $endif$
-$endfor$
-
-\end{flushleft}
 
 $body$
 
