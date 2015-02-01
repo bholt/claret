@@ -1,5 +1,5 @@
 ---
-title: Claret: Leveraging ADTs for Efficient Transactions
+title: Claret: Using Data Types for Highly Concurrent Distributed Transactions
 
 author:
   - {family: Holt,  given: Brandon, affiliation: 1, email: bholt}
@@ -14,10 +14,6 @@ organization:
 layout: sigplanconf
 bibliography: bibliography/biblio.bib
 ---
-
-leveraging data structre abstractions for highly concurrent/contended distributed transactions
-
-using data types for highly concurrent distributed transactions
 
 # Abstract {-}
 Building database applications out of data structures rather than simple string values allows the flexibility and fine-grained control of typical key-value databases while providing better performance and scalability. Composing transactions out of linearizable data structure operations exposes concurrency in a safe way, making it simple to implement efficiently and easy to reason about.
