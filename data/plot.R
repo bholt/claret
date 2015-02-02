@@ -5,7 +5,7 @@ d <- db("
   select * from tapir where 
   generator_time is not null and total_time is not null
   and (initusers = 50 or initusers = 500)
-  and name like 'claret-v0.2%'
+  and name like 'claret-v0.3%'
 ",
   factors=c('nshards', 'nclients'),
   numeric=c('total_time', 'txn_count')
