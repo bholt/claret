@@ -1,7 +1,25 @@
 #!/usr/bin/env Rscript
 source('common.R')
 
-d <- db("
+data <- function(d) {
+  d$abort_rate <- d$txn_failed / (d$txn_count + d$txn_failed)
+  d$throughput <- d$txn_count * num(d$nclients) / d$total_time
+  # d$throughput <- d$ntxns * num(d$nclients) / d$total_time
+  d$avg_latency_ms <- d$txn_time / d$txn_count * 1000
+  return(d)
+}
+
+d.all <- data(db("
+  select * from tapir where 
+  generator_time is not null and total_time is not null
+  and (initusers = 50 or initusers = 500)
+  and name like 'claret-v%'
+",
+  factors=c('nshards', 'nclients'),
+  numeric=c('total_time', 'txn_count')
+))
+
+d <- data(db("
   select * from tapir where 
   generator_time is not null and total_time is not null
   and (initusers = 50 or initusers = 500)
@@ -9,16 +27,25 @@ d <- db("
 ",
   factors=c('nshards', 'nclients'),
   numeric=c('total_time', 'txn_count')
-)
-
-d$abort_rate <- d$txn_failed / (d$txn_count + d$txn_failed)
-d$throughput <- d$txn_count * num(d$nclients) / d$total_time
-# d$throughput <- d$ntxns * num(d$nclients) / d$total_time
-d$avg_latency_ms <- d$txn_time / d$txn_count * 1000
+))
 
 common_layers <- list(theme_mine
 , facet_grid(.~nshards, labeller=label_pretty)
 )
+
+save(
+  ggplot(d.all, aes(
+    x = nclients,
+    y = throughput,
+    group = ccmode,
+    fill = ccmode,
+    color = ccmode
+  ))+
+  # geom_meanbar()+
+  stat_smooth()+
+  facet_wrap(~name)+
+  theme_mine
+, name='throughput_compare_versions', w=6, h=7)
 
 save(
   ggplot(d, aes(
