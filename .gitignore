@@ -1,3 +1,7 @@
 .ipynb_checkpoints
-data/*.pdf
+data/**/*.pdf
+claret.pdf
+claret.log
+claret.tex
+claret.out
 

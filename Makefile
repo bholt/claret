@@ -1,17 +1,26 @@
+
+PDFLATEX	?= pdflatex -halt-on-error -file-line-error
+BIBTEX		?= bibtex
+PANDOC    ?= pandoc --natbib -S --standalone
+
+ifneq ($(QUIET),)
+PDFLATEX	+= -interaction=batchmode
+ERRFILTER	:= > /dev/null || (egrep ':[[:digit:]]+:' *.log && false)
+BIBTEX		+= -terse
+else
+PDFLATEX	+= -interaction=nonstopmode
+ERRFILTER=
+endif
+
+
 .PHONY: all
 all: claret.pdf
 
-dolphins.pdf: dolphins.tex	
-	sed -i.bak 's/\\includegraphics{}//' $^
-	rm $^.bak
-	pdflatex $^
-
-claret.tex: claret.md
-	pandoc --filter pandoc-citeproc -S --standalone --template=resources/plos-one.latex -o $@ $<
+claret.tex: claret.md resources/template.tex Makefile
+	$(PANDOC) --template=resources/template.tex -o $@ $<
 
 %.pdf: %.tex
-	pdflatex $^
-	bibtex $(basename $^)
-	pdflatex $^
-	pdflatex $^
-
+	$(PDFLATEX) $^
+	$(BIBTEX) $(basename $^)
+	$(PDFLATEX) $^
+	$(PDFLATEX) $^
