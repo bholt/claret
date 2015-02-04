@@ -6,6 +6,12 @@ data <- function(d) {
   d$throughput <- d$txn_count * num(d$nclients) / d$total_time
   # d$throughput <- d$ntxns * num(d$nclients) / d$total_time
   d$avg_latency_ms <- d$txn_time / d$txn_count * 1000
+  
+  d$Commutativity <- revalue(d$ccmode, c(
+    'bottom'='base (none)',
+    'simple'='simple'
+  ))
+  
   return(d)
 }
 
@@ -47,13 +53,15 @@ save(
   theme_mine
 , name='throughput_compare_versions', w=6, h=7)
 
+d.u <- subset(d, initusers == 500 & gen == 'uniform')
+
 save(
-  ggplot(d, aes(
+  ggplot(d.u, aes(
     x = nclients,
     y = throughput,
-    group = ccmode,
-    fill = ccmode,
-    color = ccmode
+    group = Commutativity,
+    fill = Commutativity,
+    color = Commutativity
   ))+
   # geom_meanbar()+
   stat_smooth()+
@@ -61,12 +69,25 @@ save(
 , name='throughput', w=4, h=3)
 
 save(
+  ggplot(d.u, aes(
+      x = nclients,
+      y = avg_latency_ms,
+      group = Commutativity,
+      fill = Commutativity,
+      color = Commutativity
+  ))+
+  stat_smooth()+
+  geom_hline(y=0)+
+  common_layers
+, name='avg_latency', w=4, h=3)
+
+save(
   ggplot(d, aes(
       x = nclients,
       y = avg_latency_ms,
-      group = ccmode,
-      fill = ccmode,
-      color = ccmode
+      group = Commutativity,
+      fill = Commutativity,
+      color = Commutativity
   ))+
   # geom_meanbar()+
   # stat_summary(fun.y='mean', geom='bar', position='dodge')+
@@ -74,7 +95,21 @@ save(
   common_layers+
   geom_hline(y=0)+
   facet_grid(nshards~initusers, labeller=label_pretty)
-, name='avg_latency', w=8, h=6)
+, name='avg_latency_explore', w=8, h=6)
+
+save(
+  ggplot(d.u, aes(
+      x = nclients,
+      y = abort_rate,
+      group = Commutativity,
+      fill = Commutativity,
+      color = Commutativity
+  ))+
+  stat_smooth()+
+  common_layers+
+  geom_hline(y=0)+
+  facet_grid(~nshards, labeller=label_pretty)
+, name='abort_rates', w=4, h=3)
 
 save(
   ggplot(d, aes(
@@ -90,7 +125,7 @@ save(
   common_layers+
   geom_hline(y=0)+
   facet_grid(nshards~initusers, labeller=label_pretty)
-, name='abort_rates', w=8, h=6)
+, name='abort_rates_exploration', w=4, h=3)
 
 d$op_retries_total <- d$op_retries * num(d$nclients)
 d$op_retry_ratio <- d$op_retries / d$op_count
