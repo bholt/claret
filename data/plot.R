@@ -122,7 +122,7 @@ save(
   facet_grid(nshards~initusers, labeller=label_pretty)
 , name='avg_latency_explore', w=8, h=6)
 
-subset(d.u, select=c('nshards','nclients','Graph','Concurrency Control','abort_rate','throughput'))
+# subset(d.u, select=c('nshards','nclients','Graph','Concurrency Control','abort_rate','throughput'))
 
 save(
   ggplot(d.u, aes(
@@ -244,10 +244,13 @@ save(
 , name='txn_counts', w=4, h=3)
 
 
-d.m <- melt(subset(d, ccmode == 'simple'),
+d.s <- subset(d, nshards == 4 & initusers == 4096)
+
+d.m <- melt(d.s,
   measure=c(
     'retwis_newuser_success',
     'retwis_post_success',
+    'retwis_repost_success',
     'retwis_timeline_success',
     'retwis_follow_success'
   )
@@ -286,16 +289,19 @@ save(
   ))+
   ylab('success rate')+
   # geom_meanbar()+
-  stat_summary(fun.y='mean', geom='smooth')+
+  # stat_summary(fun.y='mean', geom='smooth')+
+  stat_smooth()+
   common_layers+
-  facet_wrap(~facet)
+  # facet_wrap(~facet)
+  facet_grid(Graph~ccmode, labeller=label_pretty)
 , name='txn_breakdown', w=8, h=6)
 
 
-d.m <- melt(subset(d, ccmode == 'simple'),
+d.m <- melt(d.s,
   measure=c(
     'retwis_newuser_retries',
     'retwis_post_retries',
+    'retwis_repost_retries',
     'retwis_timeline_retries',
     'retwis_follow_retries'
   )
@@ -317,5 +323,6 @@ save(
   ylab('retries')+
   stat_smooth()+
   common_layers+
-  facet_grid(nshards~initusers, labeller=label_pretty)
+  # facet_wrap(~facet)
+  facet_grid(Graph~ccmode, labeller=label_pretty)
 , name='txn_breakdown_retries', w=8, h=6)
