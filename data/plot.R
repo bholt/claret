@@ -1,6 +1,8 @@
 #!/usr/bin/env Rscript
 source('common.R')
 
+my_smooth <- function() stat_smooth(method=loess, span=0.3)
+
 capply <- function(col, func) unlist(lapply(col, func))
 
 data <- function(d) {
@@ -9,15 +11,25 @@ data <- function(d) {
   # d$throughput <- d$ntxns * num(d$nclients) / d$total_time
   d$avg_latency_ms <- d$txn_time / d$txn_count * 1000
   
-  d$`Concurrency Control` <- revalue(d$ccmode, c(
-    'bottom'='base (none)',
+  
+  # d$cc <- revalue(d$ccmode, c(
+  #   'bottom'='base (none)',
+  #   'rw'='reader/writer',
+  #   'simple'='commutative'
+  # ))
+  
+  d$ccf <- factor(d$ccmode, levels=c('simple','rw','bottom'))
+  
+  d$cc <- factor(revalue(d$ccmode, c(
+    'bottom'='base',
     'rw'='reader/writer',
     'simple'='commutative'
-  ))
+  )), levels=c('commutative','reader/writer','base'))
+  d$`Concurrency Control` <- d$cc
   
   d$Graph <- capply(d$gen, function(s) gsub('kronecker:.+','kronecker',s))
   
-  d$facet <- sprintf('sh: %d, u: %d, g: %s', num(d$nshards), d$initusers, d$Graph)
+  d$facet <- sprintf('mix: %s\n%d users\n%s', d$mix, d$initusers, d$Graph)
 
   d$gen_label <- sprintf('%d users\n%s', d$initusers, d$Graph)
   
@@ -36,7 +48,7 @@ d.all <- data(db("
 d <- data(db("
   select * from tapir where 
   generator_time is not null and total_time is not null
-  and name like 'claret-v0.5.1%'
+  and name like 'claret-v0.7%'
   and ccmode != 'bottom'
 ",
   factors=c('nshards', 'nclients'),
@@ -56,26 +68,35 @@ save(
     color = ccmode
   ))+
   # geom_meanbar()+
-  stat_smooth()+
-  facet_wrap(~name)+
+  my_smooth()+
+  facet_wrap(~facet)+
   theme_mine
 , name='throughput_compare_versions', w=6, h=7)
 
-d.u <- subset(d, (initusers == 4096 | initusers == 512) & nshards == 4)
+d.u <- subset(d, 
+  # (initusers == 4096 | initusers == 512)
+  initusers == 4096
+  & nshards == 4
+  # & mix == 'update_heavy'
+)
 
 save(
   ggplot(d.u, aes(
     x = nclients,
     y = throughput,
-    group = `Concurrency Control`,
-    fill = `Concurrency Control`,
-    color = `Concurrency Control`
+    group = ccf,
+    fill = ccf,
+    color = ccf
   ))+
   # geom_meanbar()+
-  stat_smooth()+
-  facet_wrap(~gen_label)+
+  my_smooth()+
+  stat_summary(fun.y=mean, geom="point", size=1.3)+
+  # geom_line()+
+  facet_wrap(~facet)+
+  scale_x_discrete(breaks=(0:8)*16)+
+  # scale_x_continuous(breaks=c(0, 32, 64, 96, 128))+
   theme_mine
-, name='throughput', w=4, h=5)
+, name='throughput', w=5, h=5)
 
 save(
   ggplot(d, aes(
@@ -86,7 +107,7 @@ save(
     color = `Concurrency Control`
   ))+
   # geom_meanbar()+
-  stat_smooth()+
+  my_smooth()+
   # facet_grid(nshards~initusers, labeller=label_pretty)+
   facet_wrap(~facet)+
   theme_mine
@@ -100,7 +121,7 @@ save(
       fill = `Concurrency Control`,
       color = `Concurrency Control`
   ))+
-  stat_smooth()+
+  my_smooth()+
   geom_hline(y=0)+
   facet_wrap(~gen_label)+
   theme_mine
@@ -116,7 +137,7 @@ save(
   ))+
   # geom_meanbar()+
   # stat_summary(fun.y='mean', geom='bar', position='dodge')+
-  stat_smooth()+
+  my_smooth()+
   common_layers+
   geom_hline(y=0)+
   facet_grid(nshards~initusers, labeller=label_pretty)
@@ -132,10 +153,10 @@ save(
       fill = `Concurrency Control`,
       color = `Concurrency Control`
   ))+
-  stat_smooth()+
-  facet_wrap(~gen_label)+
+  my_smooth()+
+  facet_wrap(~facet)+
   theme_mine
-, name='abort_rates', w=4, h=5)
+, name='abort_rates', w=7, h=5)
 
 save(
   ggplot(d, aes(
@@ -147,7 +168,7 @@ save(
   ))+
   # geom_meanbar()+
   # stat_summary(fun.y='mean', geom='bar', position='dodge')+
-  stat_smooth()+
+  my_smooth()+
   common_layers+
   # geom_hline(y=0)+
   facet_wrap(~facet)
@@ -164,7 +185,7 @@ save(
       fill = `Concurrency Control`,
       color = `Concurrency Control`
   ))+
-  stat_smooth()+
+  my_smooth()+
   common_layers+
   geom_hline(y=0)+
   # facet_grid(nshards~initusers, labeller=label_pretty)
@@ -186,7 +207,7 @@ save(
       color = `Concurrency Control`,
       fill = `Concurrency Control`
   ))+
-  stat_smooth()+
+  my_smooth()+
   facet_wrap(~Graph)+
   theme_mine
 , name='repost_txn_latency', w=4, h=3)
@@ -212,10 +233,10 @@ save(
       color = txn_type,
       fill = txn_type
   ))+
-  stat_smooth()+
-  facet_wrap(~Graph)+
+  my_smooth()+
+  facet_grid(ccmode~facet)+
   theme_mine
-, name='txn_breakdown_latency', w=4, h=3)
+, name='txn_breakdown_latency', w=8, h=6)
 
 
 d.ct <- melt(d.u,
@@ -230,18 +251,22 @@ d.ct <- melt(d.u,
 
 d.ct$txn_type <- capply(d.ct$variable, function(s) gsub('retwis_(\\w+)_count','\\1', s))
 d.ct$total_count <- d.ct$value * num(d.ct$nclients)
+d.ct$txn_fraction <- d.ct$total_count / (d.ct$txn_count*num(d.ct$nclients))
 
 save(
   ggplot(d.ct, aes(
       x = txn_type,
-      y = total_count,
+      y = txn_fraction,
       group = txn_type,
-      fill = txn_type
+      fill = txn_type,
+      label = total_count,
   ))+
   geom_meanbar()+
-  facet_wrap(~Graph)+
+  stat_summary(aes(label=round(..y..,2)), fun.y=mean, geom="text", size=2,
+               vjust = -0.5)+
+  facet_wrap(~facet)+
   theme_mine
-, name='txn_counts', w=4, h=3)
+, name='txn_counts', w=8, h=6)
 
 
 d.s <- subset(d, nshards == 4 & initusers == 4096)
@@ -290,10 +315,10 @@ save(
   ylab('success rate')+
   # geom_meanbar()+
   # stat_summary(fun.y='mean', geom='smooth')+
-  stat_smooth()+
+  my_smooth()+
   common_layers+
-  # facet_wrap(~facet)
-  facet_grid(Graph~ccmode, labeller=label_pretty)
+  facet_wrap(~facet)
+  # facet_grid(Graph~ccmode, labeller=label_pretty)
 , name='txn_breakdown', w=8, h=6)
 
 
@@ -321,8 +346,10 @@ save(
       group = txn_type,
   ))+
   ylab('retries')+
-  stat_smooth()+
+  my_smooth()+
   common_layers+
   # facet_wrap(~facet)
   facet_grid(Graph~ccmode, labeller=label_pretty)
 , name='txn_breakdown_retries', w=8, h=6)
+
+print("success!")

@@ -4,6 +4,14 @@ suppressPackageStartupMessages(require(ggplot2))
 suppressPackageStartupMessages(require(reshape))
 options(RMySQL.dbname="claret") # (rest comes from $HOME/.my.cnf)
 
+library(jsonlite)
+
+json.to.df <- function(jstr) {
+  d <- fromJSON(jstr)
+  return(data.frame(x=names(d),y=unlist(d)))
+}
+
+
 db <- function(query, factors=c(), numeric=c()) {
   d <- sqldf(query)
   d[factors] <- lapply(d[factors], factor)
@@ -12,6 +20,13 @@ db <- function(query, factors=c(), numeric=c()) {
 }
 
 num <- function(var) as.numeric(as.character(var))
+
+
+df.histogram <- function(json, version="none") {
+  d <- fromJSON(json)
+  return(data.frame(x=num(names(d)), y=num(unlist(d)), version=version))
+}
+
 
 save <- function(g, name=FILE_BASE, file=sprintf("%s/%s.pdf",FILE_DIR,name), w=3.3, h=3.1) {
   ggsave(plot=g, filename=file, width=w, height=h)
@@ -36,14 +51,40 @@ geom_meanbar <- function(labeller=label_pretty) {
   ))
 }
 
+c.blue   <- "#0072B2"
+c.yellow <- "#E69F00"
+c.green  <- "#009E73"
+c.red    <- "#D55E00"
+c.pink   <- "#CC79A7"
+c.gray   <- "#999999"
+
+my_palette <- c(
+  'rw'=c.yellow,
+  'simple'=c.blue,
+  
+  'reader/writer'=c.yellow,
+  'commutative'=c.blue,
+  
+  'follow'=c.blue,
+  'newuser'=c.yellow,
+  'post'=c.green,
+  'repost'=c.red,
+  'timeline'=c.pink,
+  
+  'kronecker'=c.blue,
+  
+  'none'=c.gray  
+)
+
 # The palette with grey:
 cbPalette <- c("#0072B2", "#E69F00", "#009E73", "#D55E00", "#CC79A7", "#56B4E9", "#F0E442", "#999999")
 
 theme_mine <- list(
+  expand_limits(y=0),
   # To use for fills, add
-  scale_fill_manual(values=cbPalette),
+  scale_fill_manual(values=my_palette),
   # To use for line and point colors, add
-  scale_colour_manual(values=cbPalette),
+  scale_color_manual(values=my_palette),
   # basic black and white theme
   theme(
     panel.background = element_rect(fill="white"),
