@@ -5,6 +5,7 @@ suppressPackageStartupMessages(require(reshape))
 options(RMySQL.dbname="claret") # (rest comes from $HOME/.my.cnf)
 
 library(jsonlite)
+library(scales)
 
 json.to.df <- function(jstr) {
   d <- fromJSON(jstr)
@@ -73,18 +74,33 @@ my_palette <- c(
   
   'kronecker'=c.blue,
   
+  'read'=c.pink,
+  'write'=c.green,
+  
   'none'=c.gray  
 )
 
 # The palette with grey:
 cbPalette <- c("#0072B2", "#E69F00", "#009E73", "#D55E00", "#CC79A7", "#56B4E9", "#F0E442", "#999999")
 
+my_colors <- function(title="") list(
+  scale_fill_manual(values=my_palette, name=title),
+  # To use for line and point colors, add
+  scale_color_manual(values=my_palette, name=title)
+)
+
+cc_scales <- function(field=cc, title="Concurrency control:") list(
+  scale_fill_manual(values=my_palette, name=title),
+  scale_color_manual(values=my_palette, name=title),
+  scale_linetype_manual(name=title, values=c('commutative'=1,'reader/writer'=2))
+)
+
+
 theme_mine <- list(
-  expand_limits(y=0),
-  # To use for fills, add
   scale_fill_manual(values=my_palette),
   # To use for line and point colors, add
   scale_color_manual(values=my_palette),
+  # To use for fills, add
   # basic black and white theme
   theme(
     panel.background = element_rect(fill="white"),
