@@ -3,5 +3,5 @@ common:
   prefix: .
   format: csv
 exports:
-  - query: SELECT * FROM tapir
-    filename: tapir.csv
+  - query: SELECT * FROM tapir WHERE total_time is not null AND name like 'claret-v0.14%'
+    filename: claret-v0.14.csv
