@@ -14,6 +14,7 @@
         - Facebook's [Apollo](http://www.infoq.com/news/2014/06/facebook-apollo)
             - optimized for online, low-latency access
             - "Apollo is about modifications to data structures, allow you to represent maps, queues, trees, and so on"
+                - specifically: binary value, map, deque, pqueue, and CRDTs
             - `read(conditions:{map(m1).contains(x)}, reads:{deque(d2).back()})`
             - `write(conditions : {ver(k1) == v}, reads : {}, 
       writes : {val(k1) := x})`
