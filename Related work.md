@@ -11,6 +11,12 @@
     - Data structures server
         - Redis: values can be sets, hashmaps, hyperloglogs, etc
             - can do sharding across multiple nodes, but only allows single-key operations
+        - Facebook's [Apollo](http://www.infoq.com/news/2014/06/facebook-apollo)
+            - optimized for online, low-latency access
+            - "Apollo is about modifications to data structures, allow you to represent maps, queues, trees, and so on"
+            - `read(conditions:{map(m1).contains(x)}, reads:{deque(d2).back()})`
+            - `write(conditions : {ver(k1) == v}, reads : {}, 
+      writes : {val(k1) := x})`
 
 ## Phase Reconciliation for Contended In-Memory Transactions
 - \cite{Narula:OSDI14}: OSDI'14, Neha Narula, Robert Morris (MIT CSAIL)
