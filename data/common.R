@@ -4,8 +4,8 @@ suppressPackageStartupMessages(require(ggplot2))
 suppressPackageStartupMessages(require(reshape))
 options(RMySQL.dbname="claret") # (rest comes from $HOME/.my.cnf)
 
-library(jsonlite)
-library(scales)
+suppressPackageStartupMessages(library(jsonlite))
+suppressPackageStartupMessages(library(scales))
 
 json.to.df <- function(jstr) {
   d <- fromJSON(jstr)
@@ -22,6 +22,7 @@ db <- function(query, factors=c(), numeric=c()) {
 
 num <- function(var) as.numeric(as.character(var))
 
+capply <- function(col, func) unlist(lapply(col, func))
 
 df.histogram <- function(json, version="none") {
   d <- fromJSON(json)
@@ -65,6 +66,9 @@ my_palette <- c(
   
   'reader/writer'=c.yellow,
   'commutative'=c.blue,
+
+  'approx'=c.green,
+  'precise'=c.blue,
   
   'follow'=c.blue,
   'newuser'=c.yellow,
@@ -95,6 +99,20 @@ cc_scales <- function(field=cc, title="Concurrency control:") list(
   scale_linetype_manual(name=title, values=c('commutative'=1,'reader/writer'=2))
 )
 
+my_theme <- function() theme(
+  panel.background = element_rect(fill="white"),
+  panel.border = element_rect(fill=NA, color="grey50"),
+  panel.grid.major = element_line(color="grey80", size=0.2),
+  panel.grid.minor = element_line(color="grey90", size=0.2),
+  strip.background = element_rect(fill="grey90", color="grey50"),
+  strip.background = element_rect(fill="grey80", color="grey50"),
+  axis.ticks = element_line(colour="black"),
+  panel.grid = element_line(colour="black"),
+  axis.text.y = element_text(colour="black"),
+  axis.text.x = element_text(colour="black"),
+  text = element_text(size=10, family="Helvetica")
+)
+
 
 theme_mine <- list(
   scale_fill_manual(values=my_palette),
@@ -102,17 +120,83 @@ theme_mine <- list(
   scale_color_manual(values=my_palette),
   # To use for fills, add
   # basic black and white theme
-  theme(
-    panel.background = element_rect(fill="white"),
-    panel.border = element_rect(fill=NA, color="grey50"),
-    panel.grid.major = element_line(color="grey80", size=0.2),
-    panel.grid.minor = element_line(color="grey90", size=0.2),
-    strip.background = element_rect(fill="grey90", color="grey50"),
-    strip.background = element_rect(fill="grey80", color="grey50"),
-    axis.ticks = element_line(colour="black"),
-    panel.grid = element_line(colour="black"),
-    axis.text.y = element_text(colour="black"),
-    axis.text.x = element_text(colour="black"),
-    text = element_text(size=10, family="Helvetica")
-  )
+  my_theme()
 )
+
+
+claret_data <- function(where) {
+  d <- db(
+    sprintf("select * from tapir where total_time is not null and %s", where),
+    factors=c('nshards', 'nclients'),
+    numeric=c('total_time', 'txn_count')
+  )
+  
+  d$failure_rate <- d$txn_failed / (d$txn_count + d$txn_failed)
+  d$throughput <- d$txn_count * num(d$nclients) / d$total_time
+  # d$throughput <- d$ntxns * num(d$nclients) / d$total_time
+  d$avg_latency_ms <- d$txn_time / d$txn_count * 1000
+  
+  d$prepare_total <- d$prepare_retries + d$txn_count
+  d$prepare_retry_rate <- d$prepare_retries / d$prepare_total
+  
+  # d$cc <- revalue(d$ccmode, c(
+  #   'bottom'='base (none)',
+  #   'rw'='reader/writer',
+  #   'simple'='commutative'
+  # ))
+  
+  d$ccf <- factor(d$ccmode, levels=c('simple','rw','bottom'))
+  
+  d$cc <- factor(revalue(d$ccmode, c(
+    # 'bottom'='base',
+    'rw'='reader/writer',
+    'simple'='commutative'
+  )), levels=c('commutative','reader/writer','base'))
+  d$`Concurrency Control` <- d$cc
+  
+  d$Graph <- capply(d$gen, function(s) gsub('kronecker:.+','kronecker',s))
+  
+  
+  d$workload <- factor(revalue(d$mix, c(
+    'geom_repost'='repost-heavy',
+    'read_heavy'='read-heavy',
+    'update_heavy'='mixed'
+  )), levels=c('repost-heavy','read-heavy','mixed'))
+  
+  d$zmix <- sprintf('%s/%s', d$mix, d$alpha)
+  
+  d$facet <- sprintf('shards: %d\n%s\n%d users\n%s', num(d$nshards), d$zmix, d$initusers, d$Graph)
+
+  d$gen_label <- sprintf('%d users\n%s', d$initusers, d$Graph)
+  
+  return(d)
+}
+
+data.ldbc <- function(where = "ldbc_config is not null") {
+  d <- db(sprintf("select * from ldbc where ldbc_results is not null and ldbc_results != \"\" and %s", where))
+  
+  d$cc <- factor(revalue(d$ccmode, c(
+    # 'bottom'='base',
+    'rw'='reader/writer',
+    'simple'='commutative'
+  )), levels=c('commutative','reader/writer','base'))
+  
+  d <- adply(d, 1, function(r){
+    o <- fromJSON(r$ldbc_results)
+    m <- o$all_metrics
+    mr <- m$run_time
+    colnames(mr) <- sprintf("time_%s", colnames(mr))
+    
+    data.frame(
+      throughput=as.numeric(r$ntotal)/as.numeric(o$total_duration),
+      total_time=o$total_duration,
+      name=o$all_metrics$name,
+      count=o$all_metrics$count,
+      mr
+    )
+  })
+  
+  d$name <- gsub('^.*(?:(Query\\d)|\\d(.*))$','\\1\\2',d$name)
+  
+  d
+}
