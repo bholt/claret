@@ -173,7 +173,13 @@ claret_data <- function(where) {
 }
 
 data.ldbc <- function(where = "ldbc_config is not null") {
-  d <- db(sprintf("select * from ldbc where ldbc_results is not null and ldbc_results != \"\" and %s", where))
+  d.all <- if(DATA.MODE == 'local') {
+         d_ldbc <- do.call("rbind", fromJSON("ldbc.json"))
+         sqldf(sprintf("select * from d_ldbc where ldbc_results is not null and %s",where), drv="SQLite")
+       } else {
+         db(sprintf("select * from ldbc where ldbc_results is not null and ldbc_results != \"\" and %s", where))
+       }
+  d <- d <- subset(d.all, grepl("\\s*\\{",ldbc_results))
   
   d$cc <- factor(revalue(d$ccmode, c(
     # 'bottom'='base',
