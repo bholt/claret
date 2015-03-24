@@ -2,7 +2,7 @@
 # setwd('/Users/bholt/hub/claret/data')
 source('common.R')
 
-DATA.MODE <- 'local'
+# DATA.MODE <- 'local'
 d <- data.ldbc(where="name like '%-multinode'")
 # d$ntotal <- factor(d$ntotal)
 
@@ -40,7 +40,7 @@ save(
     # & name == 'AddPost'
   ), aes(
     x = snb_time_ratio,
-    y = time_50th_percentile,
+    y = time_mean,
     group = cc,
     fill = cc,
     color = cc,
@@ -65,7 +65,7 @@ save(
     # & name == 'Query2'
   ), aes(
     x = snb_time_ratio,
-    y = server_cc_check_failed,
+    y = server_cc_check_success,
     group = cc,
     fill = cc,
     color = cc,
@@ -75,7 +75,7 @@ save(
   # geom_text(size=1.7)+
   # stat_summary(aes(label=ntotal), fun.y=mean, geom="text")+
   stat_smooth()+
-  expand_limits(y=0)+
+  # expand_limits(y=0)+
   facet_wrap(~name)+
   scale_x_log10(breaks=trans_breaks("log10", function(x) 10^x),
                 labels=trans_format("log10", math_format(10^.x)))+
